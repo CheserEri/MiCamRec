@@ -1,0 +1,34 @@
+[project]
+name = "miloco-miot"
+dynamic = ["version"]
+description = "MIoT SDK - Xiaomi IoT device communication"
+requires-python = ">=3.11"
+authors = [{ name = "Miloco team", email = "xiaomi-miloco@xiaomi.com" }]
+dependencies = [
+  "aiocache>=0.12.3",
+  "aiofiles>=25.1.0",
+  "aiohttp>=3.14.1",
+  "av>=17.1.0,<19",
+  "cryptography>=44.0.0",
+  "fastmcp>=3.4.2",
+  "paho-mqtt>=2.1.0",
+  "pillow>=12.2.0",
+  "psutil>=7.2.2",
+  "pydantic>=2.13.4",
+]
+
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+# 版本号从 git tag 派生（发布时 build.sh 经 SETUPTOOLS_SCM_PRETEND_VERSION 注入）；
+# fallback-version 让无 tag 的克隆仍能 uv sync。root 指向仓库根（git 元数据所在）。
+# version_scheme=no-guess-dev：CalVer 项目不猜"下一版"（默认 guess-next 会把末位+1 造出虚构的
+# 2026.7.4）；改以当前 tag 作 base + post 段，dev 版形如 2026.7.3.post1.devN+g<hash>，PEP440
+# 排序 > 已发布正式版（直接用 2026.7.3.devN 会被判早于正式版，引发降级误判）。
+[tool.hatch.version]
+source = "vcs"
+raw-options = { root = "../..", fallback_version = "0.0.0", version_scheme = "no-guess-dev" }
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/miot"]
